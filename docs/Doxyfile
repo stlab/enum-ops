@@ -1,0 +1,11 @@
+PROJECT_NAME           = "stlab::enum-ops"
+PROJECT_BRIEF          = "Type-safe operators for enums"
+PROJECT_NUMBER         = @PROJECT_VERSION@
+OUTPUT_DIRECTORY       = @CMAKE_CURRENT_BINARY_DIR@
+GENERATE_LATEX         = NO
+QUIET                  = YES
+WARN_IF_UNDOCUMENTED   = YES
+INPUT                  = @CMAKE_CURRENT_SOURCE_DIR@/include
+RECURSIVE              = YES
+EXCLUDE_SYMBOLS        = stlab::implementation
+EXAMPLE_PATH           = @CMAKE_CURRENT_SOURCE_DIR@/example
