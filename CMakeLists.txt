@@ -6,47 +6,10 @@ add_library(stlab-enum-ops INTERFACE)
 add_library(stlab::enum-ops ALIAS stlab-enum-ops)
 
 target_include_directories(stlab-enum-ops INTERFACE
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-  $<INSTALL_INTERFACE:include>)
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>)
 
 # Require at least C++17 for std::disjunction_v and other utilities
 target_compile_features(stlab-enum-ops INTERFACE cxx_std_17)
-
-# Install header via FILE_SET for modern consumers
-target_sources(stlab-enum-ops INTERFACE
-  FILE_SET headers
-  TYPE HEADERS
-  BASE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/include
-  FILES ${CMAKE_CURRENT_SOURCE_DIR}/include/stlab/enum_ops.hpp)
-
-include(GNUInstallDirs)
-
-install(TARGETS stlab-enum-ops
-  EXPORT stlab-enum-opsTargets
-  FILE_SET headers
-)
-
-include(CMakePackageConfigHelpers)
-
-write_basic_package_version_file(
-  "${CMAKE_CURRENT_BINARY_DIR}/stlab-enum-opsConfigVersion.cmake"
-  VERSION ${PROJECT_VERSION}
-  COMPATIBILITY SameMajorVersion)
-
-configure_file(
-  "${CMAKE_CURRENT_SOURCE_DIR}/cmake/stlab-enum-opsConfig.cmake.in"
-  "${CMAKE_CURRENT_BINARY_DIR}/stlab-enum-opsConfig.cmake"
-  @ONLY)
-
-install(EXPORT stlab-enum-opsTargets
-  FILE stlab-enum-opsTargets.cmake
-  NAMESPACE stlab::
-  DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/stlab-enum-ops)
-
-install(FILES
-  "${CMAKE_CURRENT_BINARY_DIR}/stlab-enum-opsConfig.cmake"
-  "${CMAKE_CURRENT_BINARY_DIR}/stlab-enum-opsConfigVersion.cmake"
-  DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/stlab-enum-ops)
 
 include(CTest)
 
