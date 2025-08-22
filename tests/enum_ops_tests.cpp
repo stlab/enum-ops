@@ -63,17 +63,20 @@ auto stlab_enable_arithmetic_enum(mixed_enum) -> std::true_type;
 TEST_CASE("Bitmask: bitwise OR operator") {
     // Test enum class with unsigned underlying type
     auto result = bitmask_flags::flag_a | bitmask_flags::flag_b;
-    CHECK(result == static_cast<bitmask_flags>(3u));
+    // NOLINTNEXTLINE(clang-analyzer-optin.core.EnumCastOutOfRange)
+    CHECK(result == bitmask_flags{3u});
     CHECK((result & bitmask_flags::flag_a) == bitmask_flags::flag_a);
     CHECK((result & bitmask_flags::flag_b) == bitmask_flags::flag_b);
 
     // Test enum class with signed underlying type
     auto perms = permissions::read | permissions::write;
-    CHECK(perms == static_cast<permissions>(3));
+    // NOLINTNEXTLINE(clang-analyzer-optin.core.EnumCastOutOfRange)
+    CHECK(perms == permissions{3});
 
     // Test unscoped enum
     auto mixed = mixed_one | mixed_two;
-    CHECK(mixed == static_cast<mixed_enum>(3));
+    // NOLINTNEXTLINE(clang-analyzer-optin.core.EnumCastOutOfRange)
+    CHECK(mixed == mixed_enum{3});
 
     // Verify result type is same as operands
     static_assert(
@@ -96,7 +99,8 @@ TEST_CASE("Bitmask: bitwise AND operator") {
 
 TEST_CASE("Bitmask: bitwise XOR operator") {
     auto result = bitmask_flags::flag_a ^ bitmask_flags::flag_b;
-    CHECK(result == static_cast<bitmask_flags>(3u));
+    // NOLINTNEXTLINE(clang-analyzer-optin.core.EnumCastOutOfRange)
+    CHECK(result == bitmask_flags{3u});
 
     // XOR with self should give zero
     CHECK((bitmask_flags::flag_a ^ bitmask_flags::flag_a) == bitmask_flags::none);
@@ -176,10 +180,12 @@ TEST_CASE("Bitmask: assignment operators") {
 
 TEST_CASE("Bitmask: subtraction with underlying type") {
     auto result = bitmask_flags::flag_c - 1u;
-    CHECK(result == static_cast<bitmask_flags>(3u));
+    // NOLINTNEXTLINE(clang-analyzer-optin.core.EnumCastOutOfRange)
+    CHECK(result == bitmask_flags{3u});
 
     result = bitmask_flags::all - 1u;
-    CHECK(result == static_cast<bitmask_flags>(6u));
+    // NOLINTNEXTLINE(clang-analyzer-optin.core.EnumCastOutOfRange)
+    CHECK(result == bitmask_flags{6u});
 
     // Test with signed enum
     auto perm_result = permissions::execute - 2;
@@ -216,18 +222,22 @@ TEST_CASE("Arithmetic: binary operators") {
 
     // Multiplication (enum * scalar)
     auto mult_result = arithmetic_int::two * 3;
-    CHECK(mult_result == static_cast<arithmetic_int>(6));
+    // NOLINTNEXTLINE(clang-analyzer-optin.core.EnumCastOutOfRange)
+    CHECK(mult_result == arithmetic_int{6});
 
     // Multiplication (scalar * enum)
     auto mult_result2 = 3 * arithmetic_int::two;
-    CHECK(mult_result2 == static_cast<arithmetic_int>(6));
+    // NOLINTNEXTLINE(clang-analyzer-optin.core.EnumCastOutOfRange)
+    CHECK(mult_result2 == arithmetic_int{6});
 
     // Division
-    auto div_result = static_cast<arithmetic_int>(6) / 2;
+    // NOLINTNEXTLINE(clang-analyzer-optin.core.EnumCastOutOfRange)
+    auto div_result = arithmetic_int{6} / 2;
     CHECK(div_result == arithmetic_int::three);
 
     // Modulo
-    auto mod_result = static_cast<arithmetic_int>(5) % 2;
+    // NOLINTNEXTLINE(clang-analyzer-optin.core.EnumCastOutOfRange)
+    auto mod_result = arithmetic_int{5} % 2;
     CHECK(mod_result == arithmetic_int::one);
 
     static_assert(
@@ -250,15 +260,18 @@ TEST_CASE("Arithmetic: assignment operators") {
     // Multiplication assignment
     value = arithmetic_int::two;
     value *= 3;
-    CHECK(value == static_cast<arithmetic_int>(6));
+    // NOLINTNEXTLINE(clang-analyzer-optin.core.EnumCastOutOfRange)
+    CHECK(value == arithmetic_int{6});
 
     // Division assignment
-    value = static_cast<arithmetic_int>(6);
+    // NOLINTNEXTLINE(clang-analyzer-optin.core.EnumCastOutOfRange)
+    value = arithmetic_int{6};
     value /= 2;
     CHECK(value == arithmetic_int::three);
 
     // Modulo assignment
-    value = static_cast<arithmetic_int>(7);
+    // NOLINTNEXTLINE(clang-analyzer-optin.core.EnumCastOutOfRange)
+    value = arithmetic_int{7};
     value %= 3;
     CHECK(value == arithmetic_int::one);
 
@@ -356,14 +369,16 @@ TEST_CASE("Logical: NOT operator") {
 TEST_CASE("Mixed enum: both bitmask and arithmetic operations") {
     // Bitmask operations
     auto bitmask_result = mixed_one | mixed_two;
-    CHECK(bitmask_result == static_cast<mixed_enum>(3));
+    // NOLINTNEXTLINE(clang-analyzer-optin.core.EnumCastOutOfRange)
+    CHECK(bitmask_result == mixed_enum{3});
 
     auto and_result = mixed_four & mixed_one;
     CHECK(and_result == mixed_none);
 
     // Arithmetic operations
     auto arith_result = mixed_one + mixed_two;
-    CHECK(arith_result == static_cast<mixed_enum>(3));
+    // NOLINTNEXTLINE(clang-analyzer-optin.core.EnumCastOutOfRange)
+    CHECK(arith_result == mixed_enum{3});
 
     auto mult_result = mixed_two * 2;
     CHECK(mult_result == mixed_four);
@@ -375,7 +390,8 @@ TEST_CASE("Mixed enum: both bitmask and arithmetic operations") {
 
     mixed_enum value = mixed_two;
     value += mixed_one;
-    CHECK(value == static_cast<mixed_enum>(3));
+    // NOLINTNEXTLINE(clang-analyzer-optin.core.EnumCastOutOfRange)
+    CHECK(value == mixed_enum{3});
 }
 
 /**************************************************************************************************/
@@ -390,9 +406,11 @@ TEST_CASE("Constexpr: compile-time evaluation") {
     constexpr auto shift_left_result = bitmask_flags::flag_a << 1;
     constexpr auto shift_right_result = bitmask_flags::flag_b >> 1;
 
-    CHECK(or_result == static_cast<bitmask_flags>(3u));
+    // NOLINTNEXTLINE(clang-analyzer-optin.core.EnumCastOutOfRange)
+    CHECK(or_result == bitmask_flags{3u});
     CHECK(and_result == bitmask_flags::flag_a);
-    CHECK(xor_result == static_cast<bitmask_flags>(3u));
+    // NOLINTNEXTLINE(clang-analyzer-optin.core.EnumCastOutOfRange)
+    CHECK(xor_result == bitmask_flags{3u});
     CHECK(not_result != bitmask_flags::none);
     CHECK(shift_left_result == bitmask_flags::flag_b);
     CHECK(shift_right_result == bitmask_flags::flag_a);
@@ -401,14 +419,17 @@ TEST_CASE("Constexpr: compile-time evaluation") {
     constexpr auto add_result = arithmetic_int::one + arithmetic_int::two;
     constexpr auto sub_result = arithmetic_int::three - arithmetic_int::one;
     constexpr auto mult_result = arithmetic_int::two * 3;
-    constexpr auto div_result = static_cast<arithmetic_int>(6) / 2;
-    constexpr auto mod_result = static_cast<arithmetic_int>(5) % 2;
+    // NOLINTNEXTLINE(clang-analyzer-optin.core.EnumCastOutOfRange)
+    constexpr auto div_result = arithmetic_int{6} / 2;
+    // NOLINTNEXTLINE(clang-analyzer-optin.core.EnumCastOutOfRange)
+    constexpr auto mod_result = arithmetic_int{5} % 2;
     constexpr auto unary_minus_result = -arithmetic_int::one;
     constexpr auto unary_plus_result = +arithmetic_int::two;
 
     CHECK(add_result == arithmetic_int::three);
     CHECK(sub_result == arithmetic_int::two);
-    CHECK(mult_result == static_cast<arithmetic_int>(6));
+    // NOLINTNEXTLINE(clang-analyzer-optin.core.EnumCastOutOfRange)
+    CHECK(mult_result == arithmetic_int{6});
     CHECK(div_result == arithmetic_int::three);
     CHECK(mod_result == arithmetic_int::one);
     CHECK(unary_minus_result == arithmetic_int::neg_one);
