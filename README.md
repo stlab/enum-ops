@@ -6,7 +6,7 @@
 
 Type-safe bitmask and arithmetic operators for enum types.
 
-[ci-badge]: https://github.com/stlab/enum-ops/workflows/CI/badge.svg
+[ci-badge]: https://github.com/stlab/enum-ops/workflows/ci.yml/badge.svg
 [ci-link]: https://github.com/stlab/enum-ops/actions/workflows/ci.yml
 [docs-badge]: https://img.shields.io/badge/docs-github%20pages-blue
 [docs-link]: https://stlab.github.io/enum-ops/
