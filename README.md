@@ -4,8 +4,6 @@
 [![Documentation][docs-badge]][docs-link]
 [![License][license-badge]][license-link]
 
-[![CI](https://github.com/stlab/enum-ops/actions/workflows/ci.yml/badge.svg)](https://github.com/stlab/enum-ops/actions/workflows/ci.yml)
-
 Type-safe bitmask and arithmetic operators for enum types.
 
 [ci-badge]: https://github.com/stlab/enum-ops/actions/workflows/ci.yml/badge.svg
