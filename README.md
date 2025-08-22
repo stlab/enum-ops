@@ -1,9 +1,15 @@
 # stlab::enum-ops
 
+[![CI][ci-badge]][ci-link]
+[![Documentation][docs-badge]][docs-link]
 [![License][license-badge]][license-link]
 
 Type-safe bitmask and arithmetic operators for enum types.
 
+[ci-badge]: https://github.com/stlab/enum-ops/workflows/CI/badge.svg
+[ci-link]: https://github.com/stlab/enum-ops/actions/workflows/ci.yml
+[docs-badge]: https://img.shields.io/badge/docs-github%20pages-blue
+[docs-link]: https://stlab.github.io/enum-ops/
 [license-badge]: https://img.shields.io/badge/license-BSL%201.0-blue.svg
 [license-link]: https://github.com/stlab/enum-ops/blob/main/LICENSE
 
@@ -14,7 +20,7 @@ Type-safe bitmask and arithmetic operators for enum types.
 - Bitmask operators: `~ | & ^ |= &= ^=`
 - Shift operators: `<< >> <<= >>=`
 - Arithmetic operators: `+ - * / % += -= *= /=` and increment/decrement
-- Comparisons with `nullptr` and logical `!` for convenience
+- Comparisons with `0` and logical `!` for convenience
 
 Opt-in is done by declaring one or both of:
 

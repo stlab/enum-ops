@@ -22,6 +22,6 @@ cpp_library_setup(
     NAMESPACE stlab
     HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/include/stlab/enum_ops.hpp
     EXAMPLES enum_ops_example enum_ops_example_fail
-    TESTS enum_ops_all_tests
+    TESTS enum_ops_tests
     DOCS_EXCLUDE_SYMBOLS "stlab::implementation"
 )

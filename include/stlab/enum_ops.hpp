@@ -22,6 +22,9 @@
 /*!
     \mainpage Typesafe Integers and Bit Fields (enums)
 
+    [![View on
+   GitHub](https://img.shields.io/badge/GitHub-enum--ops-181717?logo=github&style=flat)](https://github.com/stlab/enum-ops)
+
     \section Description Description
 
     \c enum_ops provides optional typesafe bitset and arithmetic operations for enumeration
@@ -59,17 +62,21 @@
 
 /**************************************************************************************************/
 
+/// The stlab namespace.
 namespace stlab {
 
 /**************************************************************************************************/
 
-/// Overload this for your enum to return std::true_type and enable bitwise operators.
+/// Overload this for your enum in the enum namespace to return std::true_type and enable bitwise
+/// operators.
 auto stlab_enable_bitmask_enum(...) -> std::false_type;
-/// Overload this for your enum to return std::true_type and enable arithmetic operators.
+/// Overload this for your enum in the enum namespace to return std::true_type and enable arithmetic
+/// operators.
 auto stlab_enable_arithmetic_enum(...) -> std::false_type;
 
 /**************************************************************************************************/
 
+/// The implementation namespace.
 namespace implementation {
 
 /**************************************************************************************************/
@@ -127,6 +134,7 @@ template <class T>
 constexpr auto operator&(T lhs, T rhs)
     -> std::enable_if_t<stlab::implementation::has_enabled_bitmask<T>, T> {
     using underlying = std::underlying_type_t<T>;
+    // NOLINTNEXTLINE(clang-analyzer-optin.core.EnumCastOutOfRange)
     return static_cast<T>(static_cast<underlying>(lhs) & static_cast<underlying>(rhs));
 }
 
@@ -135,6 +143,7 @@ template <class T>
 constexpr auto operator~(T a)
     -> std::enable_if_t<stlab::implementation::has_enabled_bitmask<T>, T> {
     using underlying = std::underlying_type_t<T>;
+    // NOLINTNEXTLINE(clang-analyzer-optin.core.EnumCastOutOfRange)
     return static_cast<T>(~static_cast<underlying>(a));
 }
 
@@ -143,6 +152,7 @@ template <class T>
 constexpr auto operator|(T lhs, T rhs)
     -> std::enable_if_t<stlab::implementation::has_enabled_bitmask<T>, T> {
     using underlying = std::underlying_type_t<T>;
+    // NOLINTNEXTLINE(clang-analyzer-optin.core.EnumCastOutOfRange)
     return static_cast<T>(static_cast<underlying>(lhs) | static_cast<underlying>(rhs));
 }
 
@@ -151,6 +161,7 @@ template <class T>
 constexpr auto operator^(T lhs, T rhs)
     -> std::enable_if_t<stlab::implementation::has_enabled_bitmask<T>, T> {
     using underlying = std::underlying_type_t<T>;
+    // NOLINTNEXTLINE(clang-analyzer-optin.core.EnumCastOutOfRange)
     return static_cast<T>(static_cast<underlying>(lhs) ^ static_cast<underlying>(rhs));
 }
 
@@ -159,8 +170,8 @@ template <class T>
 constexpr auto operator<<(T lhs, std::size_t rhs)
     -> std::enable_if_t<stlab::implementation::has_enabled_bitmask<T>, T> {
     using underlying = std::make_unsigned_t<std::underlying_type_t<T>>;
-    auto result = static_cast<underlying>(lhs) << static_cast<underlying>(rhs);
-    return static_cast<T>(result);
+    // NOLINTNEXTLINE(clang-analyzer-optin.core.EnumCastOutOfRange)
+    return static_cast<T>(static_cast<underlying>(lhs) << static_cast<underlying>(rhs));
 }
 
 template <class T>
@@ -168,8 +179,8 @@ template <class T>
 constexpr auto operator>>(T lhs, std::size_t rhs)
     -> std::enable_if_t<stlab::implementation::has_enabled_bitmask<T>, T> {
     using underlying = std::make_unsigned_t<std::underlying_type_t<T>>;
-    auto result = static_cast<underlying>(lhs) >> static_cast<underlying>(rhs);
-    return static_cast<T>(result);
+    // NOLINTNEXTLINE(clang-analyzer-optin.core.EnumCastOutOfRange)
+    return static_cast<T>(static_cast<underlying>(lhs) >> static_cast<underlying>(rhs));
 }
 
 template <class T>
@@ -214,6 +225,7 @@ constexpr auto operator-(T lhs, U rhs)
                             stlab::implementation::is_convertible_to_underlying<U, T>::value,
                         T> {
     using underlying = std::underlying_type_t<T>;
+    // NOLINTNEXTLINE(clang-analyzer-optin.core.EnumCastOutOfRange)
     return static_cast<T>(static_cast<underlying>(lhs) - static_cast<underlying>(rhs));
 }
 
@@ -224,6 +236,7 @@ template <class T>
 constexpr auto operator+(T a)
     -> std::enable_if_t<stlab::implementation::has_enabled_arithmetic<T>, T> {
     using underlying = std::underlying_type_t<T>;
+    // NOLINTNEXTLINE(clang-analyzer-optin.core.EnumCastOutOfRange)
     return static_cast<T>(+static_cast<underlying>(a));
 }
 
@@ -232,6 +245,7 @@ template <class T>
 constexpr auto operator-(T a)
     -> std::enable_if_t<stlab::implementation::has_enabled_arithmetic<T>, T> {
     using underlying = std::underlying_type_t<T>;
+    // NOLINTNEXTLINE(clang-analyzer-optin.core.EnumCastOutOfRange)
     return static_cast<T>(-static_cast<underlying>(a));
 }
 
@@ -240,6 +254,7 @@ template <class T>
 constexpr auto operator+(T lhs, T rhs)
     -> std::enable_if_t<stlab::implementation::has_enabled_arithmetic<T>, T> {
     using underlying = std::underlying_type_t<T>;
+    // NOLINTNEXTLINE(clang-analyzer-optin.core.EnumCastOutOfRange)
     return static_cast<T>(static_cast<underlying>(lhs) + static_cast<underlying>(rhs));
 }
 
@@ -248,6 +263,7 @@ template <class T>
 constexpr auto operator-(T lhs, T rhs)
     -> std::enable_if_t<stlab::implementation::has_enabled_arithmetic<T>, T> {
     using underlying = std::underlying_type_t<T>;
+    // NOLINTNEXTLINE(clang-analyzer-optin.core.EnumCastOutOfRange)
     return static_cast<T>(static_cast<underlying>(lhs) - static_cast<underlying>(rhs));
 }
 
@@ -258,6 +274,7 @@ constexpr auto operator*(T lhs, U rhs)
                             stlab::implementation::is_convertible_to_underlying<U, T>::value,
                         T> {
     using underlying = std::underlying_type_t<T>;
+    // NOLINTNEXTLINE(clang-analyzer-optin.core.EnumCastOutOfRange)
     return static_cast<T>(static_cast<underlying>(lhs) * rhs);
 }
 
@@ -268,6 +285,7 @@ constexpr auto operator*(U lhs, T rhs)
                             stlab::implementation::is_convertible_to_underlying<U, T>::value,
                         T> {
     using underlying = std::underlying_type_t<T>;
+    // NOLINTNEXTLINE(clang-analyzer-optin.core.EnumCastOutOfRange)
     return static_cast<T>(lhs * static_cast<underlying>(rhs));
 }
 
@@ -278,6 +296,7 @@ constexpr auto operator/(T lhs, U rhs)
                             stlab::implementation::is_convertible_to_underlying<U, T>::value,
                         T> {
     using underlying = std::underlying_type_t<T>;
+    // NOLINTNEXTLINE(clang-analyzer-optin.core.EnumCastOutOfRange)
     return static_cast<T>(static_cast<underlying>(lhs) / rhs);
 }
 
@@ -288,6 +307,7 @@ constexpr auto operator%(T lhs, U rhs)
                             stlab::implementation::is_convertible_to_underlying<U, T>::value,
                         T> {
     using underlying = std::underlying_type_t<T>;
+    // NOLINTNEXTLINE(clang-analyzer-optin.core.EnumCastOutOfRange)
     return static_cast<T>(static_cast<underlying>(lhs) % rhs);
 }
 
