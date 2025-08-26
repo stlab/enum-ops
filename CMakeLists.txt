@@ -7,7 +7,7 @@ include(cmake/CPM.cmake)
 
 # Fetch cpp-library via CPM (using local path for development)
 CPMAddPackage(
-    URI gh:stlab/cpp-library@1.0.0
+    URI "gh:stlab/cpp-library@1.1.2"
     DOWNLOAD_ONLY YES
 )
 include(${cpp-library_SOURCE_DIR}/cpp-library.cmake)
