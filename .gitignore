@@ -1,5 +1,5 @@
 /.cpm-cache
 /.cache
 /build
-compile_commands.json
 .DS_Store
+compile_commands.json
