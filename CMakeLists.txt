@@ -7,11 +7,8 @@ set(CPM_SOURCE_CACHE ${CMAKE_SOURCE_DIR}/.cpm-cache CACHE PATH "CPM cache")
 include(cmake/CPM.cmake)
 
 # Fetch cpp-library via CPM
-# CPMAddPackage(
-#     NAME cpp-library
-#     URL "${CMAKE_SOURCE_DIR}/../cpp-library"
-# )
-CPMAddPackage("gh:stlab/cpp-library@2.0.0")
+
+CPMAddPackage("gh:stlab/cpp-library@3.0.0")
 include(${cpp-library_SOURCE_DIR}/cpp-library.cmake)
 
 # Let cpp-library handle the project declaration and version detection
