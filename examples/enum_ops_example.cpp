@@ -1,3 +1,7 @@
+#define DOCTEST_CONFIG_IMPLEMENT
+#include <doctest/doctest.h> // DOCTEST_CONFIG_IMPLEMENT
+
+/// [EXAMPLE]
 #include <stlab/enum_ops.hpp>
 
 #include <iostream>
@@ -21,3 +25,6 @@ int main() {
     bool has_preview = (x & views::preview) == views::preview;
     std::cout << has_text << " " << has_preview << "\n";
 }
+/// [EXAMPLE]
+
+TEST_CASE("Example: common use cases") { CHECK_NOTHROW(main()); }

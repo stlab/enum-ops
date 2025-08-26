@@ -52,7 +52,8 @@
     \section Example Example
 
     The following is an example of code that will compile:
-    \include enum_ops_example.cpp
+
+    \snippet enum_ops_example.cpp EXAMPLE
 
     The following is contains an example of code that will not compile
     since the typesafe operators have not been defined.
