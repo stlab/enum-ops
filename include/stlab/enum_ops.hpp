@@ -53,7 +53,12 @@
 
     The following is an example of code that will compile:
 
-    \snippet enum_ops_example.cpp EXAMPLE
+    \dontinclude enum_ops_example.cpp
+    \skip EXAMPLE_START
+    \until OMIT_START
+    \skip OMIT_END
+    \until EXAMPLE_END
+
 
     The following is contains an example of code that will not compile
     since the typesafe operators have not been defined.
