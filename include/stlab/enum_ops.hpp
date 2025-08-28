@@ -53,7 +53,7 @@
 
     The following is an example of code that will compile:
 
-    \dontinclude enum_ops_example.cpp
+    \dontinclude enum_ops_example_test.cpp
     \skip EXAMPLE_START
     \until OMIT_START
     \skip OMIT_END
@@ -80,6 +80,12 @@ auto stlab_enable_bitmask_enum(...) -> std::false_type;
 /// operators.
 auto stlab_enable_arithmetic_enum(...) -> std::false_type;
 
+/// @{
+/// \deprecated Use stlab_enable_bitmask_enum and stlab_enable_arithmetic_enum instead.
+auto adobe_enable_bitmask_enum(...) -> std::false_type;
+auto adobe_enable_arithmetic_enum(...) -> std::false_type;
+/// @}
+
 /**************************************************************************************************/
 
 /// The implementation namespace.
@@ -91,13 +97,21 @@ template <class T>
 using has_enabled_bitmask_t = decltype(stlab_enable_bitmask_enum(std::declval<T>()));
 
 template <class T>
-constexpr bool has_enabled_bitmask = has_enabled_bitmask_t<T>::value;
+using has_deprecated_bitmask_t = decltype(adobe_enable_bitmask_enum(std::declval<T>()));
+
+template <class T>
+constexpr bool has_enabled_bitmask =
+    has_enabled_bitmask_t<T>::value || has_deprecated_bitmask_t<T>::value;
 
 template <class T>
 using has_enabled_arithmetic_t = decltype(stlab_enable_arithmetic_enum(std::declval<T>()));
 
 template <class T>
-constexpr bool has_enabled_arithmetic = has_enabled_arithmetic_t<T>::value;
+using has_deprecated_arithmetic_t = decltype(adobe_enable_arithmetic_enum(std::declval<T>()));
+
+template <class T>
+constexpr bool has_enabled_arithmetic =
+    has_enabled_arithmetic_t<T>::value || has_deprecated_arithmetic_t<T>::value;
 
 template <class T, class U>
 using enable_if_bitmask_or_arithmetic =
