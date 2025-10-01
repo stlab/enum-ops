@@ -8,15 +8,16 @@
 // Test enum definitions with different underlying types and capabilities
 
 // Bitmask-only enums
-enum class bitmask_flags : unsigned int {
+enum class bitmask_flags : unsigned {
     none = 0,
     flag_a = 1u << 0,
     flag_b = 1u << 1,
     flag_c = 1u << 2,
-    all = flag_a | flag_b | flag_c
+    flag_d = 1u << 3,
+    all = flag_a | flag_b | flag_c | flag_d
 };
 
-enum class permissions : int {
+enum class permissions : unsigned {
     none = 0,
     read = 1,
     write = 2,
@@ -178,22 +179,26 @@ TEST_CASE("Bitmask: assignment operators") {
     CHECK(flags == bitmask_flags::flag_a);
 }
 
-TEST_CASE("Bitmask: subtraction with underlying type") {
-    auto result = bitmask_flags::flag_c - 1u;
-    // NOLINTNEXTLINE(clang-analyzer-optin.core.EnumCastOutOfRange)
-    CHECK(result == bitmask_flags{3u});
+TEST_CASE("Bitmask: clear_least_set") {
+    auto result = bitmask_flags::flag_c | bitmask_flags::flag_b;
+    CHECK(bitmask_flags::flag_c == (result & (result - 1)));
 
-    result = bitmask_flags::all - 1u;
-    // NOLINTNEXTLINE(clang-analyzer-optin.core.EnumCastOutOfRange)
-    CHECK(result == bitmask_flags{6u});
-
-    // Test with signed enum
-    auto perm_result = permissions::execute - 2;
-    CHECK(perm_result == permissions::write);
-
-    static_assert(std::is_same_v<decltype(bitmask_flags::flag_a - 1u), bitmask_flags>);
+    auto perm_result = permissions::read | permissions::write;
+    CHECK(permissions::write == (perm_result & (perm_result - 1)));
 }
 
+TEST_CASE("Bitmask: least_set") {
+    auto result = bitmask_flags::flag_c | bitmask_flags::flag_b;
+    CHECK(bitmask_flags::flag_b == (result & -result));
+
+    auto perm_result = permissions::read | permissions::write;
+    CHECK(permissions::read == (perm_result & -perm_result));
+}
+
+TEST_CASE("Bitmask: clear_trailing_set") {
+    auto result = bitmask_flags::flag_d | bitmask_flags::flag_b | bitmask_flags::flag_a;
+    CHECK(bitmask_flags::flag_d == (result & (result + 1)));
+}
 /**************************************************************************************************/
 // ARITHMETIC OPERATIONS TESTS
 

@@ -8,12 +8,12 @@ include(cmake/CPM.cmake)
 
 # Fetch cpp-library via CPM
 
+# https://github.com/stlab/cpp-library/releases
 # CPMAddPackage(
 #     NAME cpp-library
 #     URL "${CMAKE_SOURCE_DIR}/../cpp-library"
 # )
-# https://github.com/stlab/cpp-library/releases
-CPMAddPackage("gh:stlab/cpp-library@4.0.1")
+CPMAddPackage("gh:stlab/cpp-library@4.0.3")
 include(${cpp-library_SOURCE_DIR}/cpp-library.cmake)
 
 # Let cpp-library handle the project declaration and version detection
