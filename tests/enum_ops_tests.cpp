@@ -13,7 +13,8 @@ enum class bitmask_flags : unsigned {
     flag_a = 1u << 0,
     flag_b = 1u << 1,
     flag_c = 1u << 2,
-    all = flag_a | flag_b | flag_c
+    flag_d = 1u << 3,
+    all = flag_a | flag_b | flag_c | flag_d
 };
 
 enum class permissions : unsigned {
@@ -180,20 +181,24 @@ TEST_CASE("Bitmask: assignment operators") {
 
 TEST_CASE("Bitmask: clear_least_set") {
     auto result = bitmask_flags::flag_c | bitmask_flags::flag_b;
-    CHECK(bitmask_flags::flag_c == clear_least_set(result));
+    CHECK(bitmask_flags::flag_c == (result & (result - 1)));
 
     auto perm_result = permissions::read | permissions::write;
-    CHECK(permissions::write == clear_least_set(perm_result));
+    CHECK(permissions::write == (perm_result & (perm_result - 1)));
 }
 
 TEST_CASE("Bitmask: least_set") {
     auto result = bitmask_flags::flag_c | bitmask_flags::flag_b;
-    CHECK(bitmask_flags::flag_b == least_set(result));
+    CHECK(bitmask_flags::flag_b == (result & -result));
 
     auto perm_result = permissions::read | permissions::write;
-    CHECK(permissions::read == least_set(perm_result));
+    CHECK(permissions::read == (perm_result & -perm_result));
 }
 
+TEST_CASE("Bitmask: clear_trailing_set") {
+    auto result = bitmask_flags::flag_d | bitmask_flags::flag_b | bitmask_flags::flag_a;
+    CHECK(bitmask_flags::flag_d == (result & (result + 1)));
+}
 /**************************************************************************************************/
 // ARITHMETIC OPERATIONS TESTS
 
