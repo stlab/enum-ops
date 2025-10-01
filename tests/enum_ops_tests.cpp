@@ -8,7 +8,7 @@
 // Test enum definitions with different underlying types and capabilities
 
 // Bitmask-only enums
-enum class bitmask_flags : unsigned int {
+enum class bitmask_flags : unsigned {
     none = 0,
     flag_a = 1u << 0,
     flag_b = 1u << 1,
@@ -16,7 +16,7 @@ enum class bitmask_flags : unsigned int {
     all = flag_a | flag_b | flag_c
 };
 
-enum class permissions : int {
+enum class permissions : unsigned {
     none = 0,
     read = 1,
     write = 2,
@@ -178,20 +178,20 @@ TEST_CASE("Bitmask: assignment operators") {
     CHECK(flags == bitmask_flags::flag_a);
 }
 
-TEST_CASE("Bitmask: subtraction with underlying type") {
-    auto result = bitmask_flags::flag_c - 1u;
-    // NOLINTNEXTLINE(clang-analyzer-optin.core.EnumCastOutOfRange)
-    CHECK(result == bitmask_flags{3u});
+TEST_CASE("Bitmask: clear_least_set") {
+    auto result = bitmask_flags::flag_c | bitmask_flags::flag_b;
+    CHECK(bitmask_flags::flag_c == clear_least_set(result));
 
-    result = bitmask_flags::all - 1u;
-    // NOLINTNEXTLINE(clang-analyzer-optin.core.EnumCastOutOfRange)
-    CHECK(result == bitmask_flags{6u});
+    auto perm_result = permissions::read | permissions::write;
+    CHECK(permissions::write == clear_least_set(perm_result));
+}
 
-    // Test with signed enum
-    auto perm_result = permissions::execute - 2;
-    CHECK(perm_result == permissions::write);
+TEST_CASE("Bitmask: least_set") {
+    auto result = bitmask_flags::flag_c | bitmask_flags::flag_b;
+    CHECK(bitmask_flags::flag_b == least_set(result));
 
-    static_assert(std::is_same_v<decltype(bitmask_flags::flag_a - 1u), bitmask_flags>);
+    auto perm_result = permissions::read | permissions::write;
+    CHECK(permissions::read == least_set(perm_result));
 }
 
 /**************************************************************************************************/
