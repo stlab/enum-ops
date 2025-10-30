@@ -134,7 +134,7 @@ auto stlab_enable_bitmask_enum(...) -> std::false_type;
 /// arithmetic operators.
 auto stlab_enable_arithmetic_enum(...) -> std::false_type;
 
-// Don't use the `\ deprecated` Doxygen tag here because clang will warn that the
+// Don't use the `\deprecated` Doxygen tag here because clang will warn that the
 // documentation marks the operations deprecated but the deprecated attribute is missing.
 
 /// \note Use is **deprecated**. Use stlab_enable_bitmask_enum instead.
