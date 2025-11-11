@@ -5,9 +5,9 @@ name: CI
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [main, develop]
   pull_request:
-    branches: [ main ]
+    branches: [main]
   release:
     types: [published]
 
@@ -32,42 +32,109 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
-    - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-    - name: Configure CMake
-      run: cmake --preset=test
+      - name: Configure CMake
+        run: cmake --preset=test
 
-    - name: Build
-      run: cmake --build --preset=test
+      - name: Build
+        run: cmake --build --preset=test
 
-    - name: Test
-      run: ctest --preset=test
+      - name: Test
+        run: ctest --preset=test
+
+  install-test:
+    name: Test Installation (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    needs: test
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Build and Install
+        run: |
+          cmake --preset=default
+          cmake --build --preset=default
+          cmake --install build/default --prefix ${{ runner.temp }}/install
+
+      - name: Test find_package
+        shell: bash
+        run: |
+          # Create a minimal test to verify the installation works with find_package
+          mkdir -p ${{ runner.temp }}/test-find-package
+          cd ${{ runner.temp }}/test-find-package
+
+          # Get project name from CMakeLists.txt
+          PROJECT_NAME=$(grep -m1 "project(" ${{ github.workspace }}/CMakeLists.txt | sed 's/project(\(.*\))/\1/' | awk '{print $1}')
+
+          # Create test CMakeLists.txt
+          cat > CMakeLists.txt << EOF
+          cmake_minimum_required(VERSION 3.20)
+          project(test-find-package CXX)
+
+          set(CMAKE_PREFIX_PATH "${{ runner.temp }}/install")
+          find_package(\${PROJECT_NAME} REQUIRED)
+
+          message(STATUS "Successfully found \${PROJECT_NAME}")
+          EOF
+
+          # Test find_package
+          cmake -B build -S .
+
+      - name: Test CPMFindPackage
+        shell: bash
+        run: |
+          # Create test to verify CPMFindPackage works (tries find_package first, then CPM)
+          mkdir -p ${{ runner.temp }}/test-cpm
+          cd ${{ runner.temp }}/test-cpm
+
+          # Download CPM.cmake
+          mkdir cmake
+          curl -L https://github.com/cpm-cmake/CPM.cmake/releases/latest/download/get_cpm.cmake -o cmake/CPM.cmake
+
+          # Get project name from CMakeLists.txt
+          PROJECT_NAME=$(grep -m1 "project(" ${{ github.workspace }}/CMakeLists.txt | sed 's/project(\(.*\))/\1/' | awk '{print $1}')
+
+          # Create test CMakeLists.txt that uses CPMFindPackage
+          cat > CMakeLists.txt << EOF
+          cmake_minimum_required(VERSION 3.20)
+          project(test-cpm CXX)
+
+          set(CMAKE_PREFIX_PATH "${{ runner.temp }}/install")
+          set(CPM_SOURCE_CACHE \${CMAKE_SOURCE_DIR}/.cache/cpm CACHE PATH "CPM cache")
+          include(cmake/CPM.cmake)
+
+          # CPMFindPackage tries find_package first, then falls back to CPMAddPackage
+          CPMFindPackage(
+              NAME \${PROJECT_NAME}
+              GITHUB_REPOSITORY ${{ github.repository }}
+              GIT_TAG ${{ github.sha }}
+          )
+
+          message(STATUS "Successfully acquired \${PROJECT_NAME} via CPMFindPackage")
+          EOF
+
+          # Test CPMFindPackage (should find the installed version first)
+          cmake -B build -S .
 
   clang-tidy:
     runs-on: ubuntu-latest
-    
+
     steps:
-    - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-    - name: Setup Ninja
-      uses: ashutoshvarma/setup-ninja@master
+      - name: Configure CMake with clang-tidy
+        run: cmake --preset=clang-tidy
 
-    - name: Setup Clang
-      uses: egor-tensin/setup-clang@v1
-      with:
-        version: latest
+      - name: Build with clang-tidy
+        run: cmake --build --preset=clang-tidy
 
-    - name: Install clang-tidy
-      run: sudo apt-get update && sudo apt-get install -y clang-tidy
-
-    - name: Configure CMake with clang-tidy
-      run: cmake --preset=clang-tidy
-
-    - name: Build with clang-tidy
-      run: cmake --build --preset=clang-tidy
-
-    - name: Run tests with clang-tidy
-      run: ctest --preset=clang-tidy
+      - name: Run tests with clang-tidy
+        run: ctest --preset=clang-tidy
 
   docs:
     runs-on: ubuntu-latest
@@ -76,27 +143,27 @@ jobs:
       id-token: write
       pages: write
       contents: read
-    
+
     steps:
-    - uses: actions/checkout@v5
-      
-    - name: Install Doxygen
-      uses: ssciwr/doxygen-install@v1
-    
-    - name: Configure CMake
-      run: cmake --preset=docs
-    
-    - name: Build Documentation
-      run: cmake --build --preset=docs
-    
-    - name: Setup Pages
-      uses: actions/configure-pages@v5
+      - uses: actions/checkout@v5
 
-    - name: Upload artifact
-      uses: actions/upload-pages-artifact@v3
-      with:
-        path: build/docs/html
+      - name: Install Doxygen
+        uses: ssciwr/doxygen-install@v1
 
-    - name: Deploy to GitHub Pages
-      id: deployment
-      uses: actions/deploy-pages@v4
+      - name: Configure CMake
+        run: cmake --preset=docs
+
+      - name: Build Documentation
+        run: cmake --build --preset=docs
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: build/docs/html
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
