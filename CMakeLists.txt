@@ -16,7 +16,7 @@ include(cmake/CPM.cmake)
 #     NAME cpp-library
 #     URL "${CMAKE_SOURCE_DIR}/../cpp-library"
 # )
-CPMAddPackage("gh:stlab/cpp-library#39419e2eb68019fcf8db3af237316308ddf3ec59")
+CPMAddPackage("gh:stlab/cpp-library#e940916f9d3d3de0c2993fcbd33b18b3e1a1e767")
 # CPMAddPackage("gh:stlab/cpp-library@4.0.5")
 
 include(${cpp-library_SOURCE_DIR}/cpp-library.cmake)
