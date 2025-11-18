@@ -71,9 +71,9 @@ jobs:
           cmake_minimum_required(VERSION 3.20)
           project(test-find-package CXX)
 
-          find_package(enum-ops REQUIRED)
+          find_package(stlab-enum-ops REQUIRED)
 
-          message(STATUS "Successfully found enum-ops")
+          message(STATUS "Successfully found stlab-enum-ops")
           EOF
 
           # Convert paths to forward slashes for CMake (works on all platforms)

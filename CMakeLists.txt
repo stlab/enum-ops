@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.20)
 
 # Project declaration - cpp_library_setup will use this name and detect version from git tags
-project(stlab-enum-ops)
+project(enum-ops)
 
 # Setup cpp-library infrastructure
 if(PROJECT_IS_TOP_LEVEL)
@@ -16,7 +16,7 @@ include(cmake/CPM.cmake)
 #     NAME cpp-library
 #     URL "${CMAKE_SOURCE_DIR}/../cpp-library"
 # )
-CPMAddPackage("gh:stlab/cpp-library#0516b9be7607caaea6737b552b1acdb9c9c620bc")
+CPMAddPackage("gh:stlab/cpp-library#e4a3ee5dc2da1d05d44a7b74a142c94a53de8003")
 # CPMAddPackage("gh:stlab/cpp-library@4.0.5")
 
 include(${cpp-library_SOURCE_DIR}/cpp-library.cmake)
