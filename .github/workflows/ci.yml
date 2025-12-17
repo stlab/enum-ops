@@ -13,21 +13,23 @@ on:
 
 jobs:
   test:
+    name: Test (${{ matrix.name }})
     strategy:
+      fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
-        compiler: [gcc, clang, msvc]
-        exclude:
-          - os: ubuntu-latest
-            compiler: msvc
-          - os: macos-latest
-            compiler: msvc
-          - os: macos-latest
-            compiler: gcc
-          - os: windows-latest
-            compiler: gcc
-          - os: windows-latest
-            compiler: clang
+        include:
+          - name: Ubuntu GCC
+            os: ubuntu-latest
+            cc: gcc
+            cxx: g++
+          - name: Ubuntu Clang
+            os: ubuntu-latest
+            cc: clang
+            cxx: clang++
+          - name: macOS
+            os: macos-latest
+          - name: Windows
+            os: windows-latest
 
     runs-on: ${{ matrix.os }}
 
@@ -36,6 +38,14 @@ jobs:
 
       - name: Configure CMake
         run: cmake --preset=test
+        env:
+          CC: ${{ matrix.cc }}
+          CXX: ${{ matrix.cxx }}
+        if: ${{ matrix.cc }}
+
+      - name: Configure CMake
+        run: cmake --preset=test
+        if: ${{ !matrix.cc }}
 
       - name: Build
         run: cmake --build --preset=test
@@ -43,11 +53,51 @@ jobs:
       - name: Test
         run: ctest --preset=test
 
+      - name: Build and Install
+        run: |
+          cmake --preset=default
+          cmake --build --preset=default
+          cmake --install build/default --prefix ${{ runner.temp }}/install
+        env:
+          CC: ${{ matrix.cc }}
+          CXX: ${{ matrix.cxx }}
+        if: ${{ matrix.cc }}
+
+      - name: Build and Install
+        run: |
+          cmake --preset=default
+          cmake --build --preset=default
+          cmake --install build/default --prefix ${{ runner.temp }}/install
+        if: ${{ !matrix.cc }}
+
+      - name: Test find_package
+        shell: bash
+        run: |
+          # Create a minimal test to verify the installation works with find_package
+          mkdir -p ${{ runner.temp }}/test-find-package
+          cd ${{ runner.temp }}/test-find-package
+
+          # Create test CMakeLists.txt
+          cat > CMakeLists.txt << EOF
+          cmake_minimum_required(VERSION 3.20)
+          project(test-find-package CXX)
+
+          find_package(stlab-enum-ops REQUIRED)
+
+          message(STATUS "Successfully found stlab-enum-ops")
+          EOF
+
+          # Convert paths to forward slashes for CMake (works on all platforms)
+          INSTALL_PREFIX=$(echo '${{ runner.temp }}/install' | sed 's|\\|/|g')
+
+          # Test find_package with CMAKE_PREFIX_PATH
+          cmake -B build -S . -DCMAKE_PREFIX_PATH="${INSTALL_PREFIX}"
+
   clang-tidy:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
 
       - name: Configure CMake with clang-tidy
         run: cmake --preset=clang-tidy
@@ -67,10 +117,11 @@ jobs:
       contents: read
 
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
 
+      # ssciwr/doxygen-install@1.6.4
       - name: Install Doxygen
-        uses: ssciwr/doxygen-install@v1
+        uses: ssciwr/doxygen-install@501e53b879da7648ab392ee226f5b90e42148449
 
       - name: Configure CMake
         run: cmake --preset=docs

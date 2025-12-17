@@ -1,6 +1,11 @@
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 #include <doctest/doctest.h>
 
+#if defined(_MSC_VER) && !defined(__clang__)
+#pragma warning(push)
+#pragma warning(disable : 4010)
+#endif
+
 #include <stlab/enum_ops.hpp> /// [EXAMPLE_START]
 
 #include <iostream>
@@ -18,12 +23,17 @@ int main() {
     foo b{foo_8};
     foo c{a | b};
     std::cout << a << " " << b << " " << c << "\n";
-
+    
     // Bitset operations on enum class
     views x = views::text | views::icon;
     bool has_text = (x & views::text) == views::text;
     bool has_preview = (x & views::preview) == views::preview;
     std::cout << has_text << " " << has_preview << "\n";
 } /// [EXAMPLE_END]
+
+
+#if defined(_MSC_VER) && !defined(__clang__)
+#pragma warning(pop)
+#endif
 
 TEST_CASE("Example: common use cases") { CHECK_NOTHROW(run_example()); }
