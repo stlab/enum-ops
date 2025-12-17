@@ -11,7 +11,8 @@
         "CMAKE_BUILD_TYPE": "Release",
         "BUILD_TESTING": "OFF",
         "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
-        "CMAKE_CXX_EXTENSIONS": "OFF"
+        "CMAKE_CXX_EXTENSIONS": "OFF",
+        "CPM_SOURCE_CACHE": "${sourceDir}/.cache/cpm"
       }
     },
     {
@@ -24,7 +25,8 @@
         "CMAKE_BUILD_TYPE": "Debug",
         "BUILD_TESTING": "ON",
         "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
-        "CMAKE_CXX_EXTENSIONS": "OFF"
+        "CMAKE_CXX_EXTENSIONS": "OFF",
+        "CPM_SOURCE_CACHE": "${sourceDir}/.cache/cpm"
       }
     },
     {
@@ -38,7 +40,8 @@
         "BUILD_TESTING": "OFF",
         "BUILD_DOCS": "ON",
         "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
-        "CMAKE_CXX_EXTENSIONS": "OFF"
+        "CMAKE_CXX_EXTENSIONS": "OFF",
+        "CPM_SOURCE_CACHE": "${sourceDir}/.cache/cpm"
       }
     },
     {
@@ -52,7 +55,8 @@
         "BUILD_TESTING": "ON",
         "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
         "CMAKE_CXX_EXTENSIONS": "OFF",
-        "CMAKE_CXX_CLANG_TIDY": "clang-tidy"
+        "CMAKE_CXX_CLANG_TIDY": "clang-tidy",
+        "CPM_SOURCE_CACHE": "${sourceDir}/.cache/cpm"
       }
     },
     {
@@ -66,21 +70,8 @@
         "BUILD_TESTING": "OFF",
         "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
         "CMAKE_CXX_EXTENSIONS": "OFF",
-        "CPP_LIBRARY_FORCE_INIT": "ON"
-      }
-    },
-    {
-      "name": "install",
-      "displayName": "Local Install Test",
-      "description": "Configuration for testing installation locally (installs to build/install/prefix)",
-      "binaryDir": "${sourceDir}/build/install",
-      "generator": "Ninja",
-      "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Release",
-        "BUILD_TESTING": "OFF",
-        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
-        "CMAKE_CXX_EXTENSIONS": "OFF",
-        "CMAKE_INSTALL_PREFIX": "${sourceDir}/build/install/prefix"
+        "CPP_LIBRARY_FORCE_INIT": "ON",
+        "CPM_SOURCE_CACHE": "${sourceDir}/.cache/cpm"
       }
     }
   ],
@@ -89,8 +80,7 @@
     { "name": "test", "displayName": "Build Tests", "configurePreset": "test" },
     { "name": "docs", "displayName": "Build Docs", "configurePreset": "docs", "targets": "docs" },
     { "name": "clang-tidy", "displayName": "Build with Clang-Tidy", "configurePreset": "clang-tidy" },
-    { "name": "init", "displayName": "Initialize Templates", "configurePreset": "init" },
-    { "name": "install", "displayName": "Build for Local Install", "configurePreset": "install" }
+    { "name": "init", "displayName": "Initialize Templates", "configurePreset": "init" }
   ],
   "testPresets": [
     { "name": "test", "displayName": "Run All Tests", "configurePreset": "test", "output": { "outputOnFailure": true } },

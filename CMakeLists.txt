@@ -1,26 +1,25 @@
-cmake_minimum_required(VERSION 3.20)
+cmake_minimum_required(VERSION 3.24)
 
-# Project declaration - cpp_library_setup will use this name and detect version from git tags
-project(enum-ops)
-
-# Setup cpp-library infrastructure
-if(PROJECT_IS_TOP_LEVEL AND NOT CPM_SOURCE_CACHE AND NOT DEFINED ENV{CPM_SOURCE_CACHE})
-    set(CPM_SOURCE_CACHE "${CMAKE_SOURCE_DIR}/.cache/cpm" CACHE PATH "CPM source cache")
-    message(STATUS "Setting cpm cache dir to: ${CPM_SOURCE_CACHE}")
-endif()
 include(cmake/CPM.cmake)
 
-# Fetch cpp-library via CPM
-
-# https://github.com/stlab/cpp-library/releases
+# Fetch cpp-library before project()
+# Check https://github.com/stlab/cpp-library/releases for the latest version
 # CPMAddPackage(
 #     NAME cpp-library
-#     URL "${CMAKE_SOURCE_DIR}/../cpp-library"
+#     SOURCE_DIR "${CMAKE_SOURCE_DIR}/../cpp-library"
 # )
-CPMAddPackage("gh:stlab/cpp-library#4f09b3b7f0abcc4ef1b39060ce03784920ce32e5")
-# CPMAddPackage("gh:stlab/cpp-library@4.0.5")
-
+# CPMAddPackage("gh:stlab/cpp-library#65dbed9fff9a0331355bd51dc1e8156262390154")
+CPMAddPackage("gh:stlab/cpp-library@5.0.0")
 include(${cpp-library_SOURCE_DIR}/cpp-library.cmake)
+
+# Enable dependency tracking before project()
+cpp_library_enable_dependency_tracking()
+
+# Now declare project
+project(enum-ops)
+
+# Enable CTest infrastructure (required for tests/examples to work)
+include(CTest)
 
 # Let cpp-library handle the project declaration and version detection
 cpp_library_setup(

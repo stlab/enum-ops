@@ -2,5 +2,6 @@
     "cSpell.words": [
         "dontinclude",
         "NOLINTNEXTLINE"
-    ]
+    ],
+    "cmake.copyCompileCommands": "${workspaceFolder}/compile_commands.json"
 }
