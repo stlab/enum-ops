@@ -6,12 +6,12 @@
 
 Type-safe bitmask and arithmetic operators for enum types.
 
-[ci-badge]: https://github.com/stlab/enum-ops/actions/workflows/ci.yml/badge.svg
-[ci-link]: https://github.com/stlab/enum-ops/actions/workflows/ci.yml
+[ci-badge]: https://github.com/stlab/stlab-enum-ops/actions/workflows/ci.yml/badge.svg
+[ci-link]: https://github.com/stlab/stlab-enum-ops/actions/workflows/ci.yml
 [docs-badge]: https://img.shields.io/badge/docs-github%20pages-blue
-[docs-link]: https://stlab.github.io/enum-ops/
+[docs-link]: https://stlab.github.io/stlab-enum-ops/
 [license-badge]: https://img.shields.io/badge/license-BSL%201.0-blue.svg
-[license-link]: https://github.com/stlab/enum-ops/blob/main/LICENSE
+[license-link]: https://github.com/stlab/stlab-enum-ops/blob/main/LICENSE
 
 ## Overview
 
@@ -51,7 +51,7 @@ cmake --build --preset=test --target enum_ops_example
 The simplest way to use `stlab::enum-ops` in your project is to add it as a dependency via [CPM](https://github.com/cpm-cmake/CPM.cmake).
 
 ```cmake
-CPMAddPackage("gh:stlab/enum-ops@1.0.0")
+CPMAddPackage("gh:stlab/stlab-enum-ops@1.0.0")
 ```
 
 ## Documentation
