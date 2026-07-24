@@ -318,7 +318,7 @@ constexpr auto operator-(T lhs, U rhs)
 template <class T>
 /// Subtracts a bitmask-enabled enum from `0`
 /// `0 - rhs` is equivalent to `-rhs`.
-constexpr auto operator-(std::nullptr_t lhs, T rhs)
+constexpr auto operator-(std::nullptr_t, T rhs)
     -> std::enable_if_t<stlab::has_enabled_bitmask<T>, T> {
     return -rhs;
 }
